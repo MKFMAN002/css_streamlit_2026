@@ -1,187 +1,212 @@
+# researcher_profile.py
 import streamlit as st
+from datetime import datetime
 import pandas as pd
 import altair as alt
 
-st.set_page_config(page_title="Retail Sales Dashboard", layout="wide")
+# ───────────────────────────────────────────────
+# PAGE CONFIG
+# ───────────────────────────────────────────────
+st.set_page_config(
+    page_title="Comfort Mankele – Research Portfolio",
+    page_icon="🌌",
+    layout="wide",
+)
 
-"""
-# 🛒 Retail Sales Analysis Dashboard
-"""
+# ───────────────────────────────────────────────
+# CUSTOM CSS (NEW LOOK)
+# ───────────────────────────────────────────────
+st.markdown("""
+<style>
+body {
+    background-color: #0b1220;
+}
 
-""  # space
+.hero {
+    padding: 60px 40px;
+    border-radius: 18px;
+    background: linear-gradient(120deg, #0f172a, #020617);
+    border: 1px solid #1e293b;
+    margin-bottom: 30px;
+}
 
-# ---- Layout like stock app ----
-cols = st.columns([1, 4])
-left_cell = cols[0].container()  # left panel will fit content height
-right_cell = cols[1].container()  # right panel flexible for charts
+.hero h1 {
+    font-size: 3rem;
+    color: #e5e7eb;
+    margin-bottom: 10px;
+}
 
-# ---- Load data ----
-df = pd.read_csv("sales_cleaned.csv")
-df["Date"] = pd.to_datetime(df["Date"])
+.hero p {
+    font-size: 1.3rem;
+    color: #94a3b8;
+}
 
-# =========================
-# Left control panel
-# =========================
-with left_cell:
-    # Simulated border around left panel
-    st.markdown(
-        "<div style='border:1px solid #ddd; padding:10px; border-radius:5px;'>",
-        unsafe_allow_html=True
-    )
+.section {
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
 
-    st.subheader("🎛 Filters")
+.section h2 {
+    color: #38bdf8;
+    margin-bottom: 15px;
+}
 
-    period = st.selectbox(
-        "Time range",
-        ["All", "Last 7 days", "Last 1 month", "Last 3 months", "Last 6 months"]
-    )
+.card {
+    background: #0b1220;
+    border: 1px solid #1e293b;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
 
-    categories = st.multiselect(
-        "Product category",
-        options=sorted(df["Product_Category"].unique()),
-        default=list(df["Product_Category"].unique())
-    )
+footer {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
 
-    genders = st.multiselect(
-        "Gender",
-        options=sorted(df["Gender"].unique()),
-        default=list(df["Gender"].unique())
-    )
+# ───────────────────────────────────────────────
+# HERO HEADER
+# ───────────────────────────────────────────────
+st.markdown("""
+<div class="hero">
+    <h1>Comfort Mankele</h1>
+    <p>Astrophysics Researcher • Radio Astronomy • Data Science</p>
+    <p>Pretoria, South Africa • Last updated: Feb 2026</p>
+</div>
+""", unsafe_allow_html=True)
 
-    qty_min, qty_max = st.slider(
-        "Quantity range",
-        int(df["Quantity"].min()),
-        int(df["Quantity"].max()),
-        (int(df["Quantity"].min()), int(df["Quantity"].max()))
-    )
+# ───────────────────────────────────────────────
+# TOP NAVIGATION
+# ───────────────────────────────────────────────
+tabs = st.tabs(["🏠 Home", "🎓 Education", "🛠 Skills", "🔬 Research", "📂 Projects", "📬 Contact"])
 
-    st.markdown("---")
-    st.subheader("📈 Trend Options")
+# ───────────────────────────────────────────────
+# HOME
+# ───────────────────────────────────────────────
+with tabs[0]:
+    st.markdown('<div class="section">', unsafe_allow_html=True)
+    st.markdown("<h2>About Me</h2>", unsafe_allow_html=True)
 
-    show_categories = st.multiselect(
-        "Show categories in trend chart",
-        options=sorted(df["Product_Category"].unique()),
-        default=list(df["Product_Category"].unique())
-    )
+    st.write("""
+    I am an MSc (Astrophysics and Space Science) student at the University of Pretoria, specializing in radio astronomy and multi-wavelength data analysis.
 
-    split_by_gender = st.toggle("Split trend by Gender")
+    **Focus areas:**
+    - Developing data reduction and calibration pipelines
+    - Imaging NenuFAR measurentset
+    - Radio galaxy spectral index mapping  
+    - Multi-wavelength overlays (radio, optical, X-ray)  
+    - FITS cube processing  
+ 
+    """)
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.info("Open to research collaborations and data projects.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# =========================
-# Apply filters
-# =========================
-filtered = df.copy()
-max_date = filtered["Date"].max()
+# ───────────────────────────────────────────────
+# EDUCATION
+# ───────────────────────────────────────────────
+with tabs[1]:
+    st.markdown('<div class="section">', unsafe_allow_html=True)
+    st.markdown("<h2>Education</h2>", unsafe_allow_html=True)
 
-if period != "All":
-    days_map = {
-        "Last 7 days": 7,
-        "Last 1 month": 30,
-        "Last 3 months": 90,
-        "Last 6 months": 180,
-    }
-    filtered = filtered[
-        filtered["Date"] >= max_date - pd.Timedelta(days=days_map[period])
-    ]
+    st.markdown("""
+    **BSc Honours in Astrophysics**  
+    University of Pretoria
 
-filtered = filtered[
-    (filtered["Product_Category"].isin(categories)) &
-    (filtered["Gender"].isin(genders)) &
-    (filtered["Quantity"].between(qty_min, qty_max))
-]
+    **BSc Astrophysics & Space Science**  
+    University of Pretoria
+    """)
 
-# =========================
-# Right panel (charts)
-# =========================
-with right_cell:
-    st.subheader("📈 Sales Trends & Breakdown")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # ---- Big Altair trend chart (aligned in right panel) ----
-    trend_df = filtered[filtered["Product_Category"].isin(show_categories)]
+# ───────────────────────────────────────────────
+# SKILLS
+# ───────────────────────────────────────────────
+with tabs[2]:
+    st.markdown('<div class="section">', unsafe_allow_html=True)
+    st.markdown("<h2>Technical Skills</h2>", unsafe_allow_html=True)
 
-    if trend_df.empty:
-        st.info("No data for the selected filters.")
-    else:
-        if split_by_gender:
-            plot_df = (
-                trend_df
-                .groupby(["Date", "Product_Category", "Gender"], as_index=False)["Total_Amount"]
-                .sum()
-            )
-            plot_df["Series"] = plot_df["Product_Category"] + " - " + plot_df["Gender"]
-            plot_long = plot_df.rename(columns={"Total_Amount": "Sales"})
+    skills = pd.DataFrame({
+        "Skill": ["Python", "CASA", "Altair/Matplotlib", "Git", "Pandas", "SQL", "Linux", "Multi-wavelength"],
+        "Level": [90, 85, 80, 75, 88, 70, 78, 82]
+    })
 
-            chart = (
-                alt.Chart(plot_long)
-                .mark_line()
-                .encode(
-                    alt.X("Date:T"),
-                    alt.Y("Sales:Q").scale(zero=False),
-                    alt.Color("Series:N"),
-                    alt.Tooltip(["Date:T", "Series:N", "Sales:Q"]),
-                )
-                .properties(height=400)
-            )
-        else:
-            plot_df = (
-                trend_df
-                .groupby(["Date", "Product_Category"], as_index=False)["Total_Amount"]
-                .sum()
-            )
-            plot_long = plot_df.rename(columns={"Total_Amount": "Sales"})
+    chart = alt.Chart(skills).mark_bar().encode(
+        x=alt.X("Level:Q", scale=alt.Scale(domain=[0, 100])),
+        y=alt.Y("Skill:N", sort="-x"),
+        tooltip=["Skill", "Level"]
+    ).properties(height=350)
 
-            chart = (
-                alt.Chart(plot_long)
-                .mark_line()
-                .encode(
-                    alt.X("Date:T"),
-                    alt.Y("Sales:Q").scale(zero=False),
-                    alt.Color("Product_Category:N"),
-                    alt.Tooltip(["Date:T", "Product_Category:N", "Sales:Q"]),
-                )
-                .properties(height=400)
-            )
+    st.altair_chart(chart, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-        st.altair_chart(chart, use_container_width=True)
+# ───────────────────────────────────────────────
+# RESEARCH
+# ───────────────────────────────────────────────
+with tabs[3]:
+    st.markdown('<div class="section">', unsafe_allow_html=True)
+    st.markdown("<h2>Research Interests</h2>", unsafe_allow_html=True)
 
-    st.markdown("---")
+    for item in [
+        "Radio galaxy spectral index mapping",
+        "Multi-wavelength image overlays",
+        "Flux extraction pipelines",
+        "Interactive astronomy dashboards",
+        "Machine learning in astrophysics",
+    ]:
+        st.markdown(f"- {item}")
 
-    # ---- KPIs ----
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Total Revenue", f"R {filtered['Total_Amount'].sum():,.0f}")
-    c2.metric("Total Orders", len(filtered))
-    c3.metric("Avg Order Value", f"R {filtered['Total_Amount'].mean():,.0f}")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # ---- Other charts below ----
-    cat_sales = filtered.groupby("Product_Category")["Total_Amount"].sum().reset_index()
-    bar = alt.Chart(cat_sales).mark_bar().encode(
-        x="Product_Category:N",
-        y="Total_Amount:Q",
-        tooltip=["Product_Category", "Total_Amount"]
-    ).properties(title="Sales by Category", height=300)
+# ───────────────────────────────────────────────
+# PROJECTS
+# ───────────────────────────────────────────────
+with tabs[4]:
+    st.markdown('<div class="section">', unsafe_allow_html=True)
+    st.markdown("<h2>Projects</h2>", unsafe_allow_html=True)
 
-    gender_sales = filtered.groupby("Gender")["Total_Amount"].sum().reset_index()
-    pie = alt.Chart(gender_sales).mark_arc().encode(
-        theta="Total_Amount:Q",
-        color="Gender:N",
-        tooltip=["Gender", "Total_Amount"]
-    ).properties(title="Sales by Gender", height=300)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown("**Radio Galaxy Spectral Index Dashboard**")
+    st.write("""
+    - FITS image processing  
+    - Spectral index heatmaps  
+    - Radio contours  
+    - Streamlit dashboard  
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    time_sales = filtered.groupby("Date")["Total_Amount"].sum().reset_index()
-    line = alt.Chart(time_sales).mark_line(point=True).encode(
-        x="Date:T",
-        y="Total_Amount:Q",
-        tooltip=["Date", "Total_Amount"]
-    ).properties(title="Total Sales Over Time", height=300)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown("**Multi-wavelength Visualisation Toolkit**")
+    st.write("Overlay radio, optical and X-ray images for galaxy studies.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    col1.altair_chart(bar, use_container_width=True)
-    col2.altair_chart(pie, use_container_width=True)
-    st.altair_chart(line, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# =========================
-# Table
-# =========================
-st.subheader("📄 Filtered Data")
-st.dataframe(filtered, use_container_width=True)
+# ───────────────────────────────────────────────
+# CONTACT
+# ───────────────────────────────────────────────
+with tabs[5]:
+    st.markdown('<div class="section">', unsafe_allow_html=True)
+    st.markdown("<h2>Contact</h2>", unsafe_allow_html=True)
+
+    with st.form("contact"):
+        name = st.text_input("Name")
+        email = st.text_input("Email")
+        msg = st.text_area("Message")
+        if st.form_submit_button("Send"):
+            if not all([name, email, msg]):
+                st.warning("Fill in all fields.")
+            else:
+                st.success("Message received (demo only).")
+
+    st.markdown("**Links**")
+    st.markdown("- GitHub: https://github.com/ComfortMankele")
+    st.markdown("- LinkedIn: https://www.linkedin.com/in/comfort-mankele/")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ───────────────────────────────────────────────
+# FOOTER
+# ───────────────────────────────────────────────
+st.caption(f"© {datetime.now().year} Comfort Mankele • Streamlit Portfolio")
