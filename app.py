@@ -14,10 +14,9 @@ st.set_page_config(
 )
 
 # ───────────────────────────────────────────────
-# CUSTOM CSS + ICONS (Font Awesome)
+# CUSTOM CSS (NEW LOOK)
 # ───────────────────────────────────────────────
 st.markdown("""
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 body {
     background-color: #0b1220;
@@ -38,7 +37,7 @@ body {
 }
 
 .hero p {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: #94a3b8;
 }
 
@@ -63,11 +62,6 @@ body {
     margin-bottom: 15px;
 }
 
-.nav-item i {
-    margin-right: 8px;
-    color: #38bdf8;
-}
-
 footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
@@ -84,27 +78,26 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ───────────────────────────────────────────────
-# TOP NAVIGATION (NO EMOJIS)
+# TOP NAVIGATION
 # ───────────────────────────────────────────────
-tabs = st.tabs(["Home", "Education", "Skills", "Research", "Projects", "Contact"])
+tabs = st.tabs(["🏠 Home", "🎓 Education", "🛠 Skills", "🔬 Research", "📂 Projects", "📬 Contact"])
 
 # ───────────────────────────────────────────────
 # HOME
 # ───────────────────────────────────────────────
 with tabs[0]:
     st.markdown('<div class="section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="nav-item"><i class="fa-solid fa-house"></i> Home</h2>', unsafe_allow_html=True)
+    st.markdown("<h2>About Me</h2>", unsafe_allow_html=True)
 
     st.write("""
-    I am an MSc (**Astrophysics and Space Science**) student at the University of Pretoria, 
-    specializing in **radio astronomy** and multi-wavelength data analysis.
+    I am a researcher in **Astrophysics and Space Science**, specializing in **radio astronomy**
+    and multi-wavelength data analysis.
 
     **Focus areas:**
-    - Developing data reduction and calibration pipelines  
-    - Imaging NenuFAR measurement sets  
     - Radio galaxy spectral index mapping  
     - Multi-wavelength overlays (radio, optical, X-ray)  
     - FITS cube processing  
+    - Interactive scientific dashboards  
     """)
 
     st.info("Open to research collaborations and data projects.")
@@ -115,14 +108,14 @@ with tabs[0]:
 # ───────────────────────────────────────────────
 with tabs[1]:
     st.markdown('<div class="section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Education</h2>', unsafe_allow_html=True)
+    st.markdown("<h2>Education</h2>", unsafe_allow_html=True)
 
     st.markdown("""
     **BSc Honours in Astrophysics**  
-    University of Pretoria  
+    University of Pretoria
 
     **BSc Astrophysics & Space Science**  
-    University of Pretoria  
+    University of Pretoria
     """)
 
     st.markdown('</div>', unsafe_allow_html=True)
@@ -132,7 +125,7 @@ with tabs[1]:
 # ───────────────────────────────────────────────
 with tabs[2]:
     st.markdown('<div class="section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="nav-item"><i class="fa-solid fa-screwdriver-wrench"></i> Skills</h2>', unsafe_allow_html=True)
+    st.markdown("<h2>Technical Skills</h2>", unsafe_allow_html=True)
 
     skills = pd.DataFrame({
         "Skill": ["Python", "CASA", "Altair/Matplotlib", "Git", "Pandas", "SQL", "Linux", "Multi-wavelength"],
@@ -153,7 +146,7 @@ with tabs[2]:
 # ───────────────────────────────────────────────
 with tabs[3]:
     st.markdown('<div class="section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="nav-item"><i class="fa-solid fa-flask"></i> Research</h2>', unsafe_allow_html=True)
+    st.markdown("<h2>Research Interests</h2>", unsafe_allow_html=True)
 
     for item in [
         "Radio galaxy spectral index mapping",
@@ -171,7 +164,7 @@ with tabs[3]:
 # ───────────────────────────────────────────────
 with tabs[4]:
     st.markdown('<div class="section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="nav-item"><i class="fa-solid fa-diagram-project"></i> Projects</h2>', unsafe_allow_html=True)
+    st.markdown("<h2>Projects</h2>", unsafe_allow_html=True)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("**Radio Galaxy Spectral Index Dashboard**")
@@ -195,7 +188,7 @@ with tabs[4]:
 # ───────────────────────────────────────────────
 with tabs[5]:
     st.markdown('<div class="section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="nav-item"><i class="fa-solid fa-envelope"></i> Contact</h2>', unsafe_allow_html=True)
+    st.markdown("<h2>Contact</h2>", unsafe_allow_html=True)
 
     with st.form("contact"):
         name = st.text_input("Name")
